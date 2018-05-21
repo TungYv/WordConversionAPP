@@ -1,0 +1,61 @@
+# This is a frame work of translation APP. 
+# which is used to convert paragraphs of words into a line of words.
+# In the file "translationAPP.ui", 
+# it contains the functions of the buttons(Clear and Input)
+
+
+__author__='Multiphase Flow Laboratory'
+__version__='2.0'
+
+import sys
+from PyQt4 import QtCore, QtGui, uic
+# import win32clipboard, win32con # use Qt-clipboard not win32clipboard
+
+qtCreatorFile = "translationAPP.ui" # Enter file here.
+ 
+Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+ 
+class MyApp(QtGui.QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        QtGui.QMainWindow.__init__(self)
+        Ui_MainWindow.__init__(self)
+        self.setupUi(self)
+        self.pushButton_trans.clicked.connect(self.get_text_converted)
+        self.pushButton_copy.clicked.connect(self.set_clipboard)
+        self.pushButton_integ.clicked.connect(self.integrated_funcs)
+        self.pushButton_close.clicked.connect(self.close)
+        self.actionExit.triggered.connect(QtGui.qApp.quit) # File-->exit
+        
+ 
+    def get_text_converted(self):
+        self.text_input = self.input_box.toPlainText() # Problem!!!
+        self.text_input.replace("\n"," ").replace("\r"," ")
+        self.text_input.replace("- ","-") #hyphen at the end of line. maybe replace("-"+" ","")
+        self.text_input.replace("  "," ").replace("   "," ")
+        if self.text_input >= '\xa1':# GBK code. detects first word automatically.
+            self.text_input.replace(' ','') # Qstring seems do not possess many funcs.
+        # else:
+            # print "not Chinese words."
+        self.output_box.setText(self.text_input)
+        #print "The words' conversion completed."
+        
+    def set_clipboard(self):
+        clipboard = QtGui.QApplication.clipboard() # clipboard is a board. initialize
+        data = QtCore.QMimeData() # data is data to put into clipboard
+        data.setText(self.text_input) # set contents to data
+        clipboard.setMimeData(data) # set contents to the clipboard I defined in 1st line.
+        #print "Words copied."
+		
+    def integrated_funcs(self):
+        '''Integrating three functions: paste, transform, and copy into a single function.'''
+        clip = QtGui.QApplication.clipboard() # initialize clipboard that connects to system clipboard
+        self.input_box.setText(clip.text()) # paste clipboard's text to input_box
+        self.get_text_converted()
+        self.set_clipboard()
+        
+        
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    window = MyApp()
+    window.show()
+    sys.exit(app.exec_())
