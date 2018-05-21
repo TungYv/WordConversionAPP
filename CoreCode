@@ -1,7 +1,6 @@
-# This is a frame work of translation APP. 
-# which is used to convert paragraphs of words into a line of words.
-# In the file "translationAPP.ui", 
-# it contains the functions of the buttons(Clear and Input)
+# This is used to convert paragraphs of words in articles into a line of words.
+# The pattern is in the file "translationAPP.ui", 
+# which contains the functions of the buttons(Clear, Input, etc.)
 
 
 __author__='Multiphase Flow Laboratory'
@@ -11,7 +10,7 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 # import win32clipboard, win32con # use Qt-clipboard not win32clipboard
 
-qtCreatorFile = "translationAPP.ui" # Enter file here.
+qtCreatorFile = "translationAPP.ui" 
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
@@ -28,12 +27,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         
  
     def get_text_converted(self):
-        self.text_input = self.input_box.toPlainText() # Problem!!!
+        self.text_input = self.input_box.toPlainText()
+        self.text_input.replace("-"+"\n","") # hyphen at the end of line converts to a single word
         self.text_input.replace("\n"," ").replace("\r"," ")
-        self.text_input.replace("- ","-") #hyphen at the end of line. maybe replace("-"+" ","")
         self.text_input.replace("  "," ").replace("   "," ")
         if self.text_input >= '\xa1':# GBK code. detects first word automatically.
-            self.text_input.replace(' ','') # Qstring seems do not possess many funcs.
+            self.text_input.replace(' ','') # Qstring seems do not possess many funcyions.
         # else:
             # print "not Chinese words."
         self.output_box.setText(self.text_input)
