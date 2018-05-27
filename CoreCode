@@ -10,7 +10,7 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 # import win32clipboard, win32con # use Qt-clipboard not win32clipboard
 
-qtCreatorFile = "translationAPP.ui" 
+qtCreatorFile = "framework.ui" 
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
